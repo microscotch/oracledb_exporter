@@ -67,19 +67,30 @@ glibc-2.29-r0.apk:
 	wget -q -O glibc-2.29-r0.apk https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.29-r0/glibc-2.29-r0.apk
 
 oraclelinux-image: $(ORA_RPM)
-	docker build -f oraclelinux/Dockerfile $(BUILD_ARGS) -t "iamseth/oracledb_exporter:$(VERSION)-oraclelinux" .
-	docker build -f oraclelinux/Dockerfile $(BUILD_ARGS) $(LEGACY_TABLESPACE) -t "iamseth/oracledb_exporter:$(VERSION)-oraclelinux_legacy-tablespace" .
-	docker tag "iamseth/oracledb_exporter:$(VERSION)-oraclelinux" "iamseth/oracledb_exporter:oraclelinux"
+	docker build -f oraclelinux/Dockerfile $(BUILD_ARGS) -t "microscotch/oracledb_exporter:$(VERSION)-oraclelinux" .
+	docker push "microscotch/oracledb_exporter:$(VERSION)-oraclelinux"
+	docker build -f oraclelinux/Dockerfile $(BUILD_ARGS) $(LEGACY_TABLESPACE) -t "microscotch/oracledb_exporter:$(VERSION)-oraclelinux_legacy-tablespace" .
+	docker push "microscotch/oracledb_exporter:$(VERSION)-oraclelinux_legacy-tablespace"
+	docker tag "microscotch/oracledb_exporter:$(VERSION)-oraclelinux" "microscotch/oracledb_exporter:oraclelinux"
+	docker push "microscotch/oracledb_exporter:oraclelinux"
 
 ubuntu-image: $(ORA_RPM)
-	docker build $(BUILD_ARGS) -t "iamseth/oracledb_exporter:$(VERSION)" .
-	docker build $(BUILD_ARGS) $(LEGACY_TABLESPACE) -t "iamseth/oracledb_exporter:$(VERSION)_legacy-tablespace" .
-	docker tag "iamseth/oracledb_exporter:$(VERSION)" "iamseth/oracledb_exporter:latest"
+	docker build $(BUILD_ARGS) -t "microscotch/oracledb_exporter:$(VERSION)" .
+	docker push "microscotch/oracledb_exporter:$(VERSION)"
+	docker build $(BUILD_ARGS) $(LEGACY_TABLESPACE) -t "microscotch/oracledb_exporter:$(VERSION)_legacy-tablespace" .
+	docker push "microscotch/oracledb_exporter:$(VERSION)_legacy-tablespace"
+	docker tag "microscotch/oracledb_exporter:$(VERSION)" "microscotch/oracledb_exporter:latest"
+	docker push "microscotch/oracledb_exporter:latest"
+
 
 alpine-image: $(ORA_RPM) sgerrand.rsa.pub glibc-2.29-r0.apk
-	docker build -f alpine/Dockerfile $(BUILD_ARGS) -t "iamseth/oracledb_exporter:$(VERSION)-alpine" .
-	docker build -f alpine/Dockerfile $(BUILD_ARGS) $(LEGACY_TABLESPACE) -t "iamseth/oracledb_exporter:$(VERSION)-alpine_legacy-tablespace" .
-	docker tag "iamseth/oracledb_exporter:$(VERSION)-alpine" "iamseth/oracledb_exporter:alpine"
+	docker build -f alpine/Dockerfile $(BUILD_ARGS) -t "microscotch/oracledb_exporter:$(VERSION)-alpine" .
+	docker push "microscotch/oracledb_exporter:$(VERSION)-alpine"
+	docker build -f alpine/Dockerfile $(BUILD_ARGS) $(LEGACY_TABLESPACE) -t "microscotch/oracledb_exporter:$(VERSION)-alpine_legacy-tablespace" .
+	docker push "microscotch/oracledb_exporter:$(VERSION)-alpine_legacy-tablespace"
+	docker tag "microscotch/oracledb_exporter:$(VERSION)-alpine" "microscotch/oracledb_exporter:alpine"
+	docker push "microscotch/oracledb_exporter:alpine"
+
 
 travis: oci.pc prereq deps test linux docker
 	@true
