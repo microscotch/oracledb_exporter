@@ -32,6 +32,7 @@ RUN yum -y install oracle-release-el7 && \
     yum -y --setopt=tsflags=nodocs update && \
     # yum list oracle-instantclient* && \
     yum -y --setopt=tsflags=nodocs install oracle-instantclient${ORACLE_VERSION}-basic.x86_64  && \
+    yum -y update
     yum clean all
 
 
